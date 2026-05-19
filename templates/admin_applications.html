@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2>Manage Applications</h2>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Branch</th>
+                        <th>CGPA</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>{{ app.student_name }}</td>
+                        <td>{{ app.branch }}</td>
+                        <td>{{ app.cgpa }}</td>
+                        <td><strong>{{ app.company_name }}</strong></td>
+                        <td>{{ app.role }}</td>
+                        <td>{{ app.applied_at|datetimeformat }}</td>
+                        <td>
+                            {% if app.status == 'Applied' %}
+                                <span class="badge bg-primary" id="status-badge-{{ app.id }}">Applied</span>
+                            {% elif app.status == 'Selected' %}
+                                <span class="badge bg-success" id="status-badge-{{ app.id }}">Selected</span>
+                            {% elif app.status == 'Rejected' %}
+                                <span class="badge bg-danger" id="status-badge-{{ app.id }}">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm" onchange="updateStatus({{ app.id }}, this.value)">
+                                <option value="Applied" {% if app.status == 'Applied' %}selected{% endif %}>Applied</option>
+                                <option value="Selected" {% if app.status == 'Selected' %}selected{% endif %}>Selected</option>
+                                <option value="Rejected" {% if app.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">No applications found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
